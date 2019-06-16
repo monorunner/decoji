@@ -4,12 +4,12 @@
 Decorator functions.
 """
 
-import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 
-def timeit(func=None, good=2, ok=30, good_face='╰(*°▽°*)╯',
-           ok_face='(๑•̀ㅂ•́)و✧', bad_face='(ノへ￣、)'):
+def timeit(func=None, good=2, ok=30, good_face=u'o(￣▽￣)d',
+           ok_face=u'(๑•̀ㅂ•́)و✧', bad_face=u'(ノへ￣`)'):
     """Decorator function to time the decorated functions.
 
     :param func: Function.
@@ -28,11 +28,11 @@ def timeit(func=None, good=2, ok=30, good_face='╰(*°▽°*)╯',
     def decorator_timeit(function):
         @wraps(function)
         def wrapped_func(*args, **kwargs):
-            start = datetime.datetime.now()
+            start = datetime.now()
             ret = function(*args, **kwargs)
-            elapsed = datetime.datetime.now() - start
-            face = (bad_face if elapsed.seconds > ok
-                    else good_face if elapsed.seconds <= good
+            elapsed = datetime.now() - start
+            face = (bad_face if elapsed > timedelta(seconds=ok)
+                    else good_face if elapsed <= timedelta(seconds=good)
                     else ok_face)
             print(f'{face} {function.__name__}: {elapsed}')
             return ret
